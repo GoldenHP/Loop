@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: cf8366b7c9661c3428c9f84d4898c7f1
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292109
+  packageName: Sword Pack 3D
+  packageVersion: 1.02
+  assetPath: Assets/Sword Pack 3D/Shaders/WeaponShader.shadergraph
+  uploadId: 690148
