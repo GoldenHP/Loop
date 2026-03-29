@@ -13,10 +13,12 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 18f;
     public float gravity = 9.8f; 
     public float jumpTime = 0.85f;
+    public float attackTime = 1f;
 
     private bool isJumping = false;
     private bool isSprinting = false;
     private bool isCrouching = false;
+    private bool isAttacking = false;
 
     private Vector3 TrueVector;
     private Vector2 MovementVector;
@@ -24,8 +26,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
 
     float jumpElapsedTime = 0;
-
-
+    float attackElapsedTime = 0;
+    
     private void Start()
     {
         if (!TryGetComponent<CharacterController>(out Controller))
@@ -55,6 +57,11 @@ public class PlayerController : MonoBehaviour
         isJumping = true;
     }
 
+    public void Attack(InputAction.CallbackContext context)
+    {
+        isAttacking = true;
+    }
+
     private void Update()
     {
         if (animator != null)
@@ -71,14 +78,16 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("run", false);
 
             animator.SetBool("sprint", isSprinting);
+
+            animator.SetBool("lightattack", isAttacking);
         }
 
-        if (Controller.isGrounded)
+        /*if (Controller.isGrounded)
         {
             animator.SetBool("air", false);
         }
         else
-            animator.SetBool("air", true);
+            animator.SetBool("air", true);*/
     }
 
     private void FixedUpdate()
@@ -100,6 +109,16 @@ public class PlayerController : MonoBehaviour
             {
                 isJumping = false;
                 jumpElapsedTime = 0f;
+            }
+        }
+
+        if (isAttacking)
+        {
+            attackElapsedTime += Time.deltaTime;
+            if (attackElapsedTime >= attackTime) 
+            {
+                isAttacking = false;
+                attackElapsedTime = 0f;
             }
         }
 
