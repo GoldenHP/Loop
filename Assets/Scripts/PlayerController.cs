@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool isSprinting = false;
     private bool isCrouching = false;
     private bool isAttacking = false;
+    private bool isRunning = false;
 
     private Vector3 TrueVector;
     private Vector2 MovementVector;
@@ -26,7 +27,6 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
 
     float jumpElapsedTime = 0;
-    float attackElapsedTime = 0;
     
     private void Start()
     {
@@ -71,23 +71,19 @@ public class PlayerController : MonoBehaviour
             else
                 animator.SetBool("crouch", false);
 
-            float minimumSpeed = 0.5f;
-            if (Controller.velocity.magnitude > minimumSpeed)
-                animator.SetBool("run", true);
-            else
-                animator.SetBool("run", false);
-
             animator.SetBool("sprint", isSprinting);
+            if (isSprinting)
+                animator.SetBool("sprint", !isSprinting);
+
+            animator.SetBool("run", isRunning);
+            //if (isRunning)
+                //animator.SetBool("run", !isRunning);
 
             animator.SetBool("lightattack", isAttacking);
         }
 
-        /*if (Controller.isGrounded)
-        {
-            animator.SetBool("air", false);
-        }
-        else
-            animator.SetBool("air", true);*/
+        if (Controller.velocity == Vector3.zero)
+            isRunning = false;
     }
 
     private void FixedUpdate()
@@ -114,13 +110,17 @@ public class PlayerController : MonoBehaviour
 
         if (isAttacking)
         {
-            attackElapsedTime += Time.deltaTime;
+            /*attackElapsedTime += Time.deltaTime;
             if (attackElapsedTime >= attackTime) 
             {
                 isAttacking = false;
                 attackElapsedTime = 0f;
-            }
+            }*/
+            isAttacking = false;
         }
+
+        if (isRunning)
+            isRunning = false;
 
         TrueVector.y = TrueVector.y - gravity * Time.deltaTime;
 
