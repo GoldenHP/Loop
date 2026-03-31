@@ -3,6 +3,7 @@ using Unity.Hierarchy;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 
 public class PlayerController : MonoBehaviour
@@ -12,13 +13,15 @@ public class PlayerController : MonoBehaviour
     public float sprintAddtion = 3.5f;
     public float jumpForce = 18f;
     public float gravity = 9.8f; 
-    public float jumpTime = 0.85f;
+    public float jumpTime = 0.25f;
     public float attackTime = 1f;
+    public float runTime = 1f;
 
     private bool isJumping = false;
     private bool isSprinting = false;
     private bool isCrouching = false;
-    private bool isAttacking = false;
+    private bool isLightAttacking = false;
+    private bool isHeavyAttacking = false;
     private bool isRunning = false;
 
     private Vector3 TrueVector;
@@ -26,7 +29,12 @@ public class PlayerController : MonoBehaviour
     private CharacterController Controller;
     private Animator animator;
 
-    float jumpElapsedTime = 0;
+    private float jumpElapsedTime = 0f;
+    private float runElapsedTime = 0f;
+
+    private bool wasJumping = false;
+    private bool wasRunning = false;
+
     
     private void Start()
     {
@@ -40,6 +48,8 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         MovementVector = context.ReadValue<Vector2>();
+        isRunning = true;
+        wasRunning = true;
     }
 
     public void Crouch(InputAction.CallbackContext context)
@@ -55,35 +65,36 @@ public class PlayerController : MonoBehaviour
     public void Jump(InputAction.CallbackContext context)
     {
         isJumping = true;
+        wasJumping = true;
     }
 
-    public void Attack(InputAction.CallbackContext context)
+    public void LightAttack(InputAction.CallbackContext context)
     {
-        isAttacking = true;
+        isLightAttacking = true;
+    }
+    
+    public void HeavyAttack(InputAction.CallbackContext context)
+    {
+        isHeavyAttacking = true;
     }
 
     private void Update()
     {
         if (animator != null)
         {
-            if (isCrouching)
-                animator.SetBool("crouch", true);
-            else
-                animator.SetBool("crouch", false);
+            animator.SetBool("crouch", isCrouching);
 
-            animator.SetBool("sprint", isSprinting);
-            if (isSprinting)
-                animator.SetBool("sprint", !isSprinting);
+            animator.SetBool("sprin", isSprinting);
 
             animator.SetBool("run", isRunning);
-            //if (isRunning)
-                //animator.SetBool("run", !isRunning);
-
-            animator.SetBool("lightattack", isAttacking);
-        }
-
-        if (Controller.velocity == Vector3.zero)
             isRunning = false;
+
+            animator.SetBool("lightattack", isLightAttacking);
+
+            animator.SetBool("heavyattack", isHeavyAttacking);
+
+            animator.SetBool("jump", isJumping);
+        }
     }
 
     private void FixedUpdate()
@@ -97,33 +108,44 @@ public class PlayerController : MonoBehaviour
         TrueVector.x = MovementVector.x * (velocity + VeloAdd) * Time.deltaTime;
         TrueVector.z = MovementVector.y * (velocity + VeloAdd) * Time.deltaTime;
 
-        if(isJumping)
+        if(isJumping || wasJumping)
         {
             TrueVector.y = Mathf.SmoothStep(jumpForce, jumpForce * 0.3f, jumpElapsedTime/jumpTime) * Time.deltaTime;
             jumpElapsedTime += Time.deltaTime;
-            if(jumpElapsedTime >= jumpTime)
+            isJumping = false;
+            if(jumpElapsedTime > jumpTime)
             {
-                isJumping = false;
+                wasJumping = false;
                 jumpElapsedTime = 0f;
             }
         }
 
-        if (isAttacking)
-        {
-            /*attackElapsedTime += Time.deltaTime;
-            if (attackElapsedTime >= attackTime) 
-            {
-                isAttacking = false;
-                attackElapsedTime = 0f;
-            }*/
-            isAttacking = false;
-        }
+        if (isLightAttacking)
+            isLightAttacking = false;
 
-        if (isRunning)
-            isRunning = false;
+        
+        if(isHeavyAttacking)
+            isHeavyAttacking = false;
 
         TrueVector.y = TrueVector.y - gravity * Time.deltaTime;
 
         Controller.Move(TrueVector);
+
+        if(MovementVector == Vector2.zero)
+        {
+            isRunning = false;
+            isSprinting = false;
+            wasRunning = false;
+        }
+
+        if(wasRunning && isRunning == false)
+        {
+            runElapsedTime += Time.deltaTime;
+            if(runElapsedTime > runTime)
+            {
+                runElapsedTime = 0f;
+                isRunning = true;
+            }
+        }
     }
 }
