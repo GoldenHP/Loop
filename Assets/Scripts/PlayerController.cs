@@ -49,6 +49,26 @@ public class PlayerController : MonoBehaviour
     {
         MovementVector = context.ReadValue<Vector2>();
         isRunning = true;
+        animator.SetBool("run", isRunning);
+
+        bool foward = false;
+        bool backwards = false;
+        bool left = false;
+        bool right = false;
+
+        if (MovementVector.x > 0f)
+            right = true;
+        if (MovementVector.x < 0f)
+            left = true;
+        if (MovementVector.y > 0f)
+            foward = true;
+        if (MovementVector.y < 0f)
+            backwards = true;
+
+        animator.SetBool("Forward", foward);
+        animator.SetBool("Backwards", backwards);
+        animator.SetBool("Left", left);
+        animator.SetBool("Right", right);
     }
 
     public void Crouch(InputAction.CallbackContext context)
@@ -84,12 +104,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("crouch", isCrouching);
 
             animator.SetBool("sprin", isSprinting);
-
-            if (isRunning != wasRunning)
-            {
-                AnimateMove();
-                wasRunning = !wasRunning;
-            }
 
             animator.SetBool("lightattack", isLightAttacking);
 
@@ -135,7 +149,8 @@ public class PlayerController : MonoBehaviour
 
         if(MovementVector == Vector2.zero)
         {
-
+            isRunning = false;
+            animator.SetBool("run", isRunning);
         }
 
         if(wasRunning && isRunning == false)
@@ -147,10 +162,5 @@ public class PlayerController : MonoBehaviour
                 isRunning = true;
             }
         }
-    }
-
-    private void AnimateMove()
-    {
-        animator.SetBool("run", isRunning);
     }
 }
