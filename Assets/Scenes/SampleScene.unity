@@ -491,6 +491,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: f3e9b9503841fcc49aa841e35b4808e4, type: 2}
+    - target: {fileID: 4264745762836402914, guid: c6d99770bbd54144381eb085c5f4f1c1, type: 3}
+      propertyPath: HeavyAttackVFXDelayTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264745762836402914, guid: c6d99770bbd54144381eb085c5f4f1c1, type: 3}
+      propertyPath: LightAttackVFXDelayTime
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8251627590948973285, guid: c6d99770bbd54144381eb085c5f4f1c1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -572,8 +580,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   particleSystems: []
-  SmallSlash: {fileID: 0}
-  BigSlash: {fileID: 0}
+  SmallSlash: {fileID: 2183146480622160771, guid: 131ad0e894ecda14eac32155d82d6c3d, type: 3}
+  BigSlash: {fileID: 1116249604692860204, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
+  Sword: {fileID: 909807675}
+  BigSlashAttackTime: 0.5
+  SmallSlashAttackTime: 0.5
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,6 +874,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &909807675 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3800952023563523588, guid: c6d99770bbd54144381eb085c5f4f1c1, type: 3}
+  m_PrefabInstance: {fileID: 370931622}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

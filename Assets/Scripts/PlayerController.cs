@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public float jumpTime = 0.25f;
     public float attackTime = 1f;
     public float runTime = 1f;
+    public float LightAttackVFXDelayTime = 0.5f;
+    public float HeavyAttackVFXDelayTime = 0.5f;
 
     private bool isJumping = false;
     private bool isSprinting = false;
@@ -28,12 +30,18 @@ public class PlayerController : MonoBehaviour
     private Vector2 MovementVector;
     private CharacterController Controller;
     private Animator animator;
+    private VFXScript VFX;
 
     private float jumpElapsedTime = 0f;
     private float runElapsedTime = 0f;
 
     private bool wasJumping = false;
     private bool wasRunning = false;
+
+    private bool LightAttackCountDown = false;
+    private bool HeavyAttackCountDown = false;
+    private float LightAttackCountDownTimer = 0f;
+    private float HeavyAttackCountDownTimer = 0f;
 
     
     private void Start()
@@ -43,6 +51,9 @@ public class PlayerController : MonoBehaviour
       
         if (!TryGetComponent<Animator>(out animator))
             Debug.LogError("Animator Failed to load");
+
+        if (!TryGetComponent<VFXScript>(out VFX))
+            Debug.LogError("VFX Script Failed to load");
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -137,11 +148,37 @@ public class PlayerController : MonoBehaviour
         }
 
         if (isLightAttacking)
+        {
             isLightAttacking = false;
+            LightAttackCountDown = true;
+        }
 
-        
-        if(isHeavyAttacking)
+        if(LightAttackCountDown)
+            LightAttackCountDownTimer += Time.deltaTime;
+
+
+        if (LightAttackCountDownTimer >= LightAttackVFXDelayTime)
+        {
+            VFX.SmallAttack();
+            LightAttackCountDownTimer = 0f;
+            LightAttackCountDown = false;
+        }
+
+        if (isHeavyAttacking)
+        {
             isHeavyAttacking = false;
+            HeavyAttackCountDown = true;
+        }
+
+        if(HeavyAttackCountDown)
+            HeavyAttackCountDownTimer += Time.deltaTime;
+
+        if (HeavyAttackCountDownTimer >= HeavyAttackVFXDelayTime)
+        {
+            VFX.BigAttack();
+            HeavyAttackCountDownTimer = 0f;
+            HeavyAttackCountDown = false;
+        }
 
         TrueVector.y = TrueVector.y - gravity * Time.deltaTime;
 

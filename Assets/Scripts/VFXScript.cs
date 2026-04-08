@@ -7,26 +7,67 @@ public class VFXScript : MonoBehaviour
     [SerializeField] public ParticleSystem[] particleSystems;
     [SerializeField] public GameObject SmallSlash;
     [SerializeField] public GameObject BigSlash;
+    [SerializeField] public GameObject Sword;
+
+    [Header("Slash Timer")]
+    [SerializeField] public float BigSlashAttackTime = 1f;
+    [SerializeField] public float SmallSlashAttackTime = 1f;
 
     private Coroutine coroutine;
 
-    IEnumerator PlayParticles()
+    private GameObject BigSlashInstance;
+    private GameObject SmallSlashInstance;
+
+    private float BigSlashTimer = 0f;
+    private float SmallSlashTimer = 0f;
+
+    private bool BigSlashCountdown = false;
+    private bool SmallSlashCountdown = false;
+
+    public void BigAttack()
     {
-        while (coroutine != null) 
+        Transform SlashTransformSpawn = transform;
+        SlashTransformSpawn.Translate(Vector3.forward * 5, Space.Self);
+
+        if (!BigSlashCountdown)
         {
-            foreach(ParticleSystem particle in particleSystems)
-            {
-                particle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            }
+            BigSlashInstance = GameObject.Instantiate(BigSlash, SlashTransformSpawn);
+            BigSlashCountdown = true;
+        }
+    }
 
-            yield return new WaitForSeconds(1f);
+    public void SmallAttack() 
+    {
+        Transform SlashTransformSpawn = transform;
+        SlashTransformSpawn.Translate(Vector3.forward * 2, Space.Self);
 
-            foreach(ParticleSystem particle in particleSystems)
-            {
-                particle.Play(true);
-            }
+        if (!SmallSlashCountdown)
+        {
+            SmallSlashInstance = GameObject.Instantiate(SmallSlash, SlashTransformSpawn);
+            SmallSlashCountdown = true;
+        }
+    }
 
-            yield return new WaitForSeconds(1.5f);
+    public void FixedUpdate()
+    {
+        if (BigSlashCountdown)
+            BigSlashTimer += Time.deltaTime;
+
+        if(SmallSlashCountdown)
+            SmallSlashTimer += Time.deltaTime;
+
+        if(BigSlashTimer >= BigSlashAttackTime)
+        {
+            BigSlashCountdown = false;
+            Destroy(BigSlashInstance);
+            BigSlashTimer = 0f;
+        }
+
+        if(SmallSlashTimer >= SmallSlashAttackTime)
+        {
+            SmallSlashCountdown = false;
+            Destroy(SmallSlashInstance);
+            SmallSlashTimer = 0f;
         }
     }
 }
