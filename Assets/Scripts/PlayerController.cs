@@ -85,11 +85,13 @@ public class PlayerController : MonoBehaviour
     public void Crouch(InputAction.CallbackContext context)
     {
         isCrouching = !isCrouching;
+        animator.SetBool("crouch", isCrouching);
     }
 
     public void Sprint(InputAction.CallbackContext context)
     {
         isSprinting = !isSprinting;
+        animator.SetBool("sprin", isSprinting);
     }
 
     public void Jump(InputAction.CallbackContext context)

@@ -7,7 +7,6 @@ public class VFXScript : MonoBehaviour
     [SerializeField] public ParticleSystem[] particleSystems;
     [SerializeField] public GameObject SmallSlash;
     [SerializeField] public GameObject BigSlash;
-    [SerializeField] public GameObject Sword;
 
     [Header("Slash Timer")]
     [SerializeField] public float BigSlashAttackTime = 1f;
@@ -37,7 +36,6 @@ public class VFXScript : MonoBehaviour
     {
         Transform SlashTransformSpawn = transform;
         SlashTransformSpawn.Translate(Vector3.forward * 5, Space.Self);
-        canHeavyAttack = false;
 
         if (!BigSlashCountdown)
         {
@@ -55,7 +53,6 @@ public class VFXScript : MonoBehaviour
         {
             SmallSlashInstance = GameObject.Instantiate(SmallSlash, SlashTransformSpawn);
             SmallSlashCountdown = true;
-            canLightAttack = false;
         }
     }
 
