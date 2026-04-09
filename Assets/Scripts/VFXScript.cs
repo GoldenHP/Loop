@@ -24,10 +24,20 @@ public class VFXScript : MonoBehaviour
     private bool BigSlashCountdown = false;
     private bool SmallSlashCountdown = false;
 
+    public bool canHeavyAttack;
+    public bool canLightAttack;
+
+    private void Start()
+    {
+        canHeavyAttack = true;
+        canLightAttack = true;
+    }
+
     public void BigAttack()
     {
         Transform SlashTransformSpawn = transform;
         SlashTransformSpawn.Translate(Vector3.forward * 5, Space.Self);
+        canHeavyAttack = false;
 
         if (!BigSlashCountdown)
         {
@@ -45,6 +55,7 @@ public class VFXScript : MonoBehaviour
         {
             SmallSlashInstance = GameObject.Instantiate(SmallSlash, SlashTransformSpawn);
             SmallSlashCountdown = true;
+            canLightAttack = false;
         }
     }
 
@@ -61,6 +72,7 @@ public class VFXScript : MonoBehaviour
             BigSlashCountdown = false;
             Destroy(BigSlashInstance);
             BigSlashTimer = 0f;
+            canHeavyAttack = true;
         }
 
         if(SmallSlashTimer >= SmallSlashAttackTime)
@@ -68,6 +80,7 @@ public class VFXScript : MonoBehaviour
             SmallSlashCountdown = false;
             Destroy(SmallSlashInstance);
             SmallSlashTimer = 0f;
+            canLightAttack = true;
         }
     }
 }

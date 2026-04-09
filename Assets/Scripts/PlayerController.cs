@@ -100,12 +100,20 @@ public class PlayerController : MonoBehaviour
 
     public void LightAttack(InputAction.CallbackContext context)
     {
-        isLightAttacking = true;
+        if (VFX.canLightAttack)
+        {
+            isLightAttacking = true;
+            VFX.canLightAttack = false;
+        }
     }
     
     public void HeavyAttack(InputAction.CallbackContext context)
     {
-        isHeavyAttacking = true;
+        if (VFX.canHeavyAttack)
+        {
+            isHeavyAttacking = true;
+            VFX.canHeavyAttack = false;
+        }
     }
 
     private void Update()
