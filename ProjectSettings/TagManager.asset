@@ -9,6 +9,7 @@ TagManager:
   - PlayerLightAttack
   - PlayerHeavyAttack
   - PlayerAttack
+  - PlayerCamera
   layers:
   - Default
   - TransparentFX
