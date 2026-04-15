@@ -4,95 +4,160 @@ using UnityEngine.InputSystem;
 public class ControlCamera : MonoBehaviour
 {
     [Header("Target")]
-    public Transform Player;
-    public Vector3 pivotOffset = new Vector3 (0f, 1.6f, 0f);
+    public Transform player;           // drag your Player root here
+    public Vector3 pivotOffset = new Vector3(0f, 1.6f, 0f); // shoulder height
 
     [Header("Orbit")]
-    public float followSpeed = 10f;
-    public float returnDelay = 1.2f;
+    public float followSpeed = 10f;  // how fast camera yaw catches player
+    public float returnDelay = 1.2f; // seconds idle before auto-returning
 
     [Header("Sensitivity")]
-    public float mouseSense = 0.15f;
-    public float joyStickSense = 180f;
+    public float mouseSensitivity = 0.15f;
+    public float joystickSensitivity = 180f;
 
     [Header("Pitch Limits")]
-    public float minPinch = -80f;
-    public float maxPinch = 80f;
+    public float minPitch = -20f;
+    public float maxPitch = 50f;
 
     [Header("Distance")]
-    public float DesiredDistance = 4f;
+    public float desiredDistance = 4f;
     public float minDistance = 0.5f;
+
+    [Header("Collision")]
+    public float collisionRadius = 0.2f;
+    public LayerMask collisionMask;      // set to Default (or whatever your geometry is)
 
     [Header("Invert Y")]
     public bool invertY = false;
 
-    [Header("Camera")]
-    public GameObject Camera;
+    private float _yaw;
+    private float _pitch;
+    private float _currentDistance;
+    private float _idleTimer;
+    private float _targetYaw;
 
-    [Header("Collision")]
-    public float collisionRadius = 0.2f;
-    public LayerMask collisonMask;
+    private bool _playerIsMoving;
+    private bool _isGamepad;
 
-    private float yaw;
-    private float pitch;
-    private float currentDistance;
-    private float targetYaw;
+    private InputAction _lookAction;
+    private InputAction _moveAction;
 
-
-    private Vector2 cameraMovement;
-
-    private void Start()
+    void Awake()
     {
-        Camera = GameObject.FindGameObjectWithTag("PlayerCamera");
-        if(Camera == null)
-        {
-            Debug.LogError("Couldnt Find Main Cmaera");
-        }
+        var playerInput = player.GetComponent<PlayerInput>();
+        _lookAction = playerInput.actions["Look"];
+        _moveAction = playerInput.actions["Move"];
+    }
 
-        yaw = Player.eulerAngles.y;
-        targetYaw = yaw;
-        pitch = 15f;
-        currentDistance = DesiredDistance;
+    void OnEnable()
+    {
+        _lookAction.Enable();
+        _moveAction.Enable();
+        InputSystem.onActionChange += OnActionDeviceChange;
+    }
+
+    void OnDisable()
+    {
+        _lookAction.Disable();
+        _moveAction.Disable();
+        InputSystem.onActionChange -= OnActionDeviceChange;
+    }
+
+    void Start()
+    {
+        _yaw = player.eulerAngles.y;
+        _targetYaw = _yaw;
+        _pitch = 15f;
+        _currentDistance = desiredDistance;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
     }
 
-    public void CameraMouseMove(InputAction.CallbackContext context)
+    void LateUpdate()  // LateUpdate keeps the camera from jittering after physics
     {
-        cameraMovement = context.ReadValue<Vector2>();
-
-        float deltaX, deltaY;
-
-        deltaX = cameraMovement.x * mouseSense;
-        deltaY = cameraMovement.y * mouseSense;
-
-        if(invertY)
-            deltaY = -deltaY;
-
-        yaw += deltaX;
-        pitch += deltaY;
-        pitch = Mathf.Clamp(pitch, minPinch, maxPinch);
-
-        Camera.transform.rotation = Quaternion.Euler(yaw, pitch, 0f);
+        HandleLookInput();
+        //HandleAutoFollow();
+        ApplyCollision();
+        ApplyTransform();
     }
 
-    public void CameraControllerMove(InputAction.CallbackContext context) 
+    void HandleLookInput()
     {
-        cameraMovement = context.ReadValue<Vector2>();
+        Vector2 look = _lookAction.ReadValue<Vector2>();
 
-        float deltaX, deltaY;
-        deltaX = cameraMovement.x * joyStickSense;
-        deltaY = cameraMovement.y * joyStickSense;
+        float deltaX;
 
-        if (invertY)
-            deltaY = -deltaY;
+        if (_isGamepad)
+            deltaX = look.x * joystickSensitivity * Time.deltaTime;
+        else
+            deltaX = look.x * mouseSensitivity;
 
-        yaw += deltaX;
-        pitch += deltaY;
-        pitch = Mathf.Clamp(pitch, minPinch, maxPinch);
+        // Yaw follows look.x — player turns left/right
+        _yaw += deltaX;
 
-        Camera.transform.rotation = Quaternion.Euler(yaw, pitch, 0f);
+        // Pitch is fixed — camera stays level, no up/down look
+        _pitch = 15f; // or whatever default angle you want
     }
+
+    void HandleAutoFollow()
+    {
+        Vector2 move = _moveAction.ReadValue<Vector2>();
+        _playerIsMoving = move.magnitude > 0.1f;
+
+        if (_playerIsMoving)
+            _idleTimer += Time.deltaTime;
+        else
+            _idleTimer = 0f;
+
+        // After returnDelay seconds of moving without manual look input,
+        // smoothly swing the camera behind the player
+        if (_idleTimer >= returnDelay)
+        {
+            _targetYaw = player.eulerAngles.y;
+            _yaw = Mathf.LerpAngle(_yaw, _targetYaw, followSpeed * Time.deltaTime);
+        }
+    }
+
+    void ApplyCollision()
+    {
+        Vector3 pivotWorld = player.position + pivotOffset;
+        Vector3 direction = transform.position - pivotWorld;
+
+        // SphereCast from pivot toward desired camera position
+        if (Physics.SphereCast(pivotWorld, collisionRadius, direction.normalized,
+                               out RaycastHit hit, desiredDistance, collisionMask))
+        {
+            _currentDistance = Mathf.Clamp(hit.distance, minDistance, desiredDistance);
+        }
+        else
+        {
+            // Smoothly restore distance when obstruction clears
+            _currentDistance = Mathf.Lerp(_currentDistance, desiredDistance, 10f * Time.deltaTime);
+        }
+    }
+
+    void ApplyTransform()
+    {
+        Vector3 pivotWorld = player.position + pivotOffset;
+
+        // Use player's yaw + camera's pitch only, no roll
+        Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        Vector3 offset = rotation * new Vector3(0f, 0f, -_currentDistance);
+
+        transform.position = pivotWorld + offset;
+        transform.LookAt(pivotWorld);
+    }
+
+    void OnActionDeviceChange(object action, InputActionChange change)
+    {
+        if (change != InputActionChange.ActionPerformed) return;
+
+        var inputAction = action as InputAction;
+        if (inputAction == null || inputAction.name != "Look") return;
+
+        _isGamepad = inputAction.activeControl?.device is Gamepad;
+    }
+
+
 }
