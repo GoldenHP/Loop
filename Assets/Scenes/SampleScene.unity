@@ -141,21 +141,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536a89b5c134f724bb982a34e752f6bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  player: {fileID: 307045603}
-  pivotOffset: {x: 0, y: 1.6, z: 0}
-  followSpeed: 10
-  returnDelay: 1.2
-  mouseSensitivity: 0.15
-  joystickSensitivity: 180
-  minPitch: -20
-  maxPitch: 50
-  desiredDistance: 4
-  minDistance: 0.5
-  collisionRadius: 0.2
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  invertY: 0
+  pivotOffset: {x: 0, y: 1.9, z: -2}
+  Camera: {fileID: 0}
+  MouseSense: 0.1
+  JoyStickSense: 180
 --- !u!136 &307045610
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -546,7 +535,7 @@ PrefabInstance:
       objectReference: {fileID: 307045604}
     - target: {fileID: 4872217650585953604, guid: 53944399da39b4a4e9dc2ed0b9692569, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4872217650585953604, guid: 53944399da39b4a4e9dc2ed0b9692569, type: 3}
       propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -554,7 +543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4872217650585953604, guid: 53944399da39b4a4e9dc2ed0b9692569, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CameraMouseMove
+      value: LookMouse
       objectReference: {fileID: 0}
     - target: {fileID: 4872217650585953604, guid: 53944399da39b4a4e9dc2ed0b9692569, type: 3}
       propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -604,7 +593,7 @@ GameObject:
   - component: {fileID: 762865140}
   m_Layer: 0
   m_Name: PlayerCamera
-  m_TagString: Untagged
+  m_TagString: PlayerCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -894,7 +883,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1154844765}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1154844770
 Camera:
   m_ObjectHideFlags: 0

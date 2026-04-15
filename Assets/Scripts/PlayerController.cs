@@ -142,15 +142,24 @@ public class PlayerController : MonoBehaviour
         if (isCrouching)
             VeloAdd = -(velocity * 0.5f);
 
-        TrueVector.x = MovementVector.x * (velocity + VeloAdd) * Time.deltaTime;
-        TrueVector.z = MovementVector.y * (velocity + VeloAdd) * Time.deltaTime;
-
-        if(isJumping || wasJumping)
+        if (transform.rotation.eulerAngles.y > 0f)
         {
-            TrueVector.y = Mathf.SmoothStep(jumpForce, jumpForce * 0.3f, jumpElapsedTime/jumpTime) * Time.deltaTime;
+            TrueVector.x = MovementVector.x * (velocity + VeloAdd) * Time.deltaTime;
+            TrueVector.z = MovementVector.y * (velocity + VeloAdd) * Time.deltaTime;
+        }
+        else if (transform.rotation.eulerAngles.y < 0f)
+        {
+            TrueVector.x = -(MovementVector.x * (velocity + VeloAdd) * Time.deltaTime);
+            TrueVector.z = -(MovementVector.y * (velocity + VeloAdd) * Time.deltaTime);
+        }
+
+
+        if (isJumping || wasJumping)
+        {
+            TrueVector.y = Mathf.SmoothStep(jumpForce, jumpForce * 0.3f, jumpElapsedTime / jumpTime) * Time.deltaTime;
             jumpElapsedTime += Time.deltaTime;
             isJumping = false;
-            if(jumpElapsedTime > jumpTime)
+            if (jumpElapsedTime > jumpTime)
             {
                 wasJumping = false;
                 jumpElapsedTime = 0f;
@@ -193,6 +202,7 @@ public class PlayerController : MonoBehaviour
         TrueVector.y = TrueVector.y - gravity * Time.deltaTime;
 
         Controller.Move(TrueVector);
+        
 
         if(MovementVector == Vector2.zero)
         {
