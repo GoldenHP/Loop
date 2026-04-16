@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4079124398521111750}
   - component: {fileID: 5597903141344739309}
   - component: {fileID: 4681993115256717588}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shafts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4906,7 +4906,7 @@ GameObject:
   - component: {fileID: 4719898835281556316}
   - component: {fileID: 4471741294974269565}
   - component: {fileID: 750330780577095070}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GreenLight
   m_TagString: PlayerLightAttack
   m_Icon: {fileID: 0}
@@ -9824,7 +9824,7 @@ GameObject:
   - component: {fileID: 1050432699813670065}
   - component: {fileID: 881903439032767335}
   - component: {fileID: 7889104875258300520}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14719,6 +14719,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Multiple Slashes
       objectReference: {fileID: 0}
+    - target: {fileID: 1116249604692860204, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1208275532420764258, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
       propertyPath: randomSeed
       value: 0
@@ -14754,6 +14758,10 @@ PrefabInstance:
     - target: {fileID: 1208275532420764258, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
       propertyPath: CustomDataModule.vector0_0.maxCurve.m_Curve.Array.data[1].value
       value: 0.17105293
+      objectReference: {fileID: 0}
+    - target: {fileID: 1307567851730393654, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3258259394500697055, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
       propertyPath: m_Enabled
@@ -14854,6 +14862,10 @@ PrefabInstance:
     - target: {fileID: 7992965519308341905, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
       propertyPath: InitialModule.startLifetime.minScalar
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200982250486817631, guid: 8a02c4042c68dd244abad8cf394dab42, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

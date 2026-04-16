@@ -142,16 +142,18 @@ public class PlayerController : MonoBehaviour
         if (isCrouching)
             VeloAdd = -(velocity * 0.5f);
 
-        if (transform.rotation.eulerAngles.y > 0f)
+        /*if (transform.rotation.y > 0f)
         {
             TrueVector.x = MovementVector.x * (velocity + VeloAdd) * Time.deltaTime;
             TrueVector.z = MovementVector.y * (velocity + VeloAdd) * Time.deltaTime;
         }
-        else if (transform.rotation.eulerAngles.y < 0f)
+        else if (transform.rotation.y < 0f)
         {
             TrueVector.x = -(MovementVector.x * (velocity + VeloAdd) * Time.deltaTime);
             TrueVector.z = -(MovementVector.y * (velocity + VeloAdd) * Time.deltaTime);
-        }
+        }*/
+
+       Movement();
 
 
         if (isJumping || wasJumping)
@@ -199,9 +201,9 @@ public class PlayerController : MonoBehaviour
             HeavyAttackCountDown = false;
         }
 
-        TrueVector.y = TrueVector.y - gravity * Time.deltaTime;
+        //TrueVector.y = TrueVector.y - gravity * Time.deltaTime;
 
-        Controller.Move(TrueVector);
+        //Controller.Move(TrueVector);
         
 
         if(MovementVector == Vector2.zero)
@@ -219,5 +221,21 @@ public class PlayerController : MonoBehaviour
                 isRunning = true;
             }
         }
+    }
+
+    public void Movement()
+    {
+        //The Direction that the player wants to move normalized. 
+        Vector2 TrueMove = MovementVector.normalized;
+
+        Vector3 LeftRight = transform.right;
+        Vector3 ForwardBackward = transform.forward;
+
+        LeftRight = LeftRight * TrueMove.x / 5f;
+        ForwardBackward = ForwardBackward * TrueMove.y / 5f;
+
+        Vector3 FinalMove = LeftRight + ForwardBackward;
+        FinalMove.y = FinalMove.y - gravity * Time.deltaTime;
+        Controller.Move(FinalMove);
     }
 }

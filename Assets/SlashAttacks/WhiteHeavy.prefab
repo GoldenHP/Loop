@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1208275532420764258}
   - component: {fileID: 3258259394500697055}
   - component: {fileID: 3274285746467668290}
-  m_Layer: 0
+  - component: {fileID: 6648039728311242397}
+  m_Layer: 8
   m_Name: WhiteHeavy
   m_TagString: PlayerHeavyAttack
   m_Icon: {fileID: 0}
@@ -4867,10 +4868,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 384
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -4878,6 +4879,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5.209968
   m_Center: {x: 0, y: 0.20996809, z: 0}
+--- !u!114 &6648039728311242397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116249604692860204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 299992cadda243a4f9e35004ea161571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1307567851730393654
 GameObject:
   m_ObjectHideFlags: 0
@@ -4889,7 +4902,7 @@ GameObject:
   - component: {fileID: 4478843693372940856}
   - component: {fileID: 7992965519308341905}
   - component: {fileID: 5349603988218628028}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Flying
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9783,7 +9796,7 @@ GameObject:
   - component: {fileID: 8911131620822425674}
   - component: {fileID: 6750138537053361815}
   - component: {fileID: 6877057326494895805}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Slash Cracks
   m_TagString: Untagged
   m_Icon: {fileID: 0}

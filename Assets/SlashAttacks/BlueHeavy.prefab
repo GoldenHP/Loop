@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1208275532420764258}
   - component: {fileID: 3258259394500697055}
   - component: {fileID: 3274285746467668290}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BlueHeavy
   m_TagString: PlayerHeavyAttack
   m_Icon: {fileID: 0}
@@ -4889,7 +4889,7 @@ GameObject:
   - component: {fileID: 4478843693372940856}
   - component: {fileID: 7992965519308341905}
   - component: {fileID: 5349603988218628028}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Flying
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9783,7 +9783,7 @@ GameObject:
   - component: {fileID: 8911131620822425674}
   - component: {fileID: 6750138537053361815}
   - component: {fileID: 6877057326494895805}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Slash Cracks
   m_TagString: Untagged
   m_Icon: {fileID: 0}

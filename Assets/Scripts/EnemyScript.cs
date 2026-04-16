@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     [Header("Enemy Stats")]
-    [SerializeField] public int enemyHealth = 10;
+    [SerializeField] public int enemyMaxHealth = 20;
     [SerializeField] public float enemyMaxSpeed = 10f;
     [SerializeField] public int enemyAttackDamage = 2;
 
@@ -16,6 +16,7 @@ public class EnemyScript : MonoBehaviour
     public float LookSpeed = 30f;
     public float MinAngle = -60f;
     public float MaxAngle = 60f;
+    public float TimeTillLookHarder = 20f;
 
     [Header("Detection")]
     public LayerMask PlayerLayer;
@@ -27,6 +28,11 @@ public class EnemyScript : MonoBehaviour
     public float targetAngle = 0f;
     private Quaternion startRotation;
 
+    private float timeLookingForPlayer=0f;
+    private bool lookingHarder = false;
+
+    private int enemyCurrentHealth;
+
     private void Start()
     {
         if(!TryGetComponent<Animator>(out animator))
@@ -36,6 +42,8 @@ public class EnemyScript : MonoBehaviour
 
         startRotation = transform.rotation;
         targetAngle = MaxAngle;
+
+        enemyCurrentHealth = enemyMaxHealth;
     }
 
     public void Update()
@@ -50,15 +58,13 @@ public class EnemyScript : MonoBehaviour
 
             if(hit.collider.gameObject.CompareTag("Player"))
             {
-
-                if(hit.collider.gameObject.CompareTag("Player"))
-                {
-                    TrackingTarget = hit.collider.gameObject;
-                }
-                else
-                {
-                    TrackingTarget = null;
-                }
+                TrackingTarget = hit.collider.gameObject;
+                if(lookingHarder)
+                    StopLookingHarder();
+            }
+            else
+            {
+                TrackingTarget = null;
             }
         }
 
@@ -92,6 +98,8 @@ public class EnemyScript : MonoBehaviour
         }
         if(TrackingTarget == null)
         {
+            animator.SetBool("run", false);
+            animator.SetBool("walk", false);
             LookAround();
         }
     }
@@ -103,18 +111,33 @@ public class EnemyScript : MonoBehaviour
 
         if(Mathf.Approximately(currentAngle, targetAngle))
             targetAngle = (targetAngle == MaxAngle) ?  MinAngle : MaxAngle;
+
+        timeLookingForPlayer += Time.deltaTime;
+        if(timeLookingForPlayer > TimeTillLookHarder)
+        {
+            MinAngle -= 30f;
+            MaxAngle += 30f;
+            lookingHarder = true;
+        }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void StopLookingHarder()
     {
-        if (collision.gameObject.tag == "PlayerLightAttack") 
-        {
-        
-        }
+        timeLookingForPlayer = 0f;
+        MinAngle += 30f;
+        MaxAngle -= 30f;
+        lookingHarder = false;
+    }
 
-        if(collision.gameObject.tag == "PLayerHeavyAttack")
-        {
+    public void TakeDamage(int DamageDealt)
+    {
+        enemyCurrentHealth -= DamageDealt;
+        if(enemyCurrentHealth <= 0)
+            EnemyDeath();
+    }
 
-        }
+    public void EnemyDeath()
+    {
+        Destroy(gameObject);
     }
 }
