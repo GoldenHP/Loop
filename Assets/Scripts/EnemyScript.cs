@@ -62,10 +62,10 @@ public class EnemyScript : MonoBehaviour
                 if(lookingHarder)
                     StopLookingHarder();
             }
-            else
-            {
-                TrackingTarget = null;
-            }
+        }
+        else
+        {
+            TrackingTarget = null;
         }
 
         EnemyMove(hit);
