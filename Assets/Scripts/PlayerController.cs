@@ -19,6 +19,10 @@ public class PlayerController : MonoBehaviour
     public float LightAttackVFXDelayTime = 0.5f;
     public float HeavyAttackVFXDelayTime = 0.5f;
 
+    [Header("Player Stats")]
+    public int PlayerMaxHealth = 20;
+    public int PlayerDamage = 10;
+
     private bool isJumping = false;
     private bool isSprinting = false;
     private bool isCrouching = false;
@@ -43,6 +47,8 @@ public class PlayerController : MonoBehaviour
     private float LightAttackCountDownTimer = 0f;
     private float HeavyAttackCountDownTimer = 0f;
 
+    public int PlayerCurrentHealth;
+
     
     private void Start()
     {
@@ -54,6 +60,8 @@ public class PlayerController : MonoBehaviour
 
         if (!TryGetComponent<VFXScript>(out VFX))
             Debug.LogError("VFX Script Failed to load");
+
+        PlayerCurrentHealth = PlayerMaxHealth;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -237,5 +245,28 @@ public class PlayerController : MonoBehaviour
         Vector3 FinalMove = LeftRight + ForwardBackward;
         FinalMove.y = FinalMove.y - gravity * Time.deltaTime;
         Controller.Move(FinalMove);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.gameObject.name);
+
+        if(other.CompareTag("EnemyAttack"))
+        {
+            EnemyScript enemy;
+            enemy = other.GetComponentInParent<EnemyScript>();
+            if (!enemy)
+                Debug.Log("Failed to get Script");
+            else
+            {
+                PlayerCurrentHealth -= enemy.enemyAttackDamage;
+                Debug.Log("Player Took damage");
+                if(PlayerCurrentHealth <= 0)
+                {
+                    //Death();
+                    Debug.Log("Death Should Occur");
+                }
+            }
+        }
     }
 }

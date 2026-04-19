@@ -21,6 +21,10 @@ public class EnemyScript : MonoBehaviour
     [Header("Detection")]
     public LayerMask PlayerLayer;
 
+    [Header("Movement Ranges")]
+    public float AttackRange = 2f;
+    public float WalkRange = 10f;
+
     private Animator animator;
     private GameObject TrackingTarget;
 
@@ -75,11 +79,11 @@ public class EnemyScript : MonoBehaviour
     {
         if(TrackingTarget != null)
         {
-            if (hit.distance < 5f)
+            if (hit.distance < AttackRange)
             {
-                //Attack()
+                Attack();
             }
-            else if (hit.distance < 30f)
+            else if (hit.distance < WalkRange)
             {
                 animator.SetBool("walk", true);
                 animator.SetBool("run", false);
@@ -139,5 +143,13 @@ public class EnemyScript : MonoBehaviour
     public void EnemyDeath()
     {
         Destroy(gameObject);
+    }
+
+    public void Attack()
+    {
+        animator.SetBool("run", false);
+        animator.SetBool("walk", false);
+        animator.SetBool("stab", true);
+        TrackingTarget = null;
     }
 }

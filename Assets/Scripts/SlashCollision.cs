@@ -17,6 +17,7 @@ public class SlashCollision : MonoBehaviour
         else
         {
             Enemy.TakeDamage(Damage);
+            Debug.Log("Enemy Take Damage");
             Enemy = null;
         }
     }
