@@ -13,7 +13,7 @@ public class ControlCamera : MonoBehaviour
     public float MouseSense = 15f;
     public float JoyStickSense = 180f;
 
-    private void Start()
+    private void Awake()
     {
         Camera = GameObject.FindGameObjectWithTag("PlayerCamera");
         if (Camera == null)
@@ -37,5 +37,15 @@ public class ControlCamera : MonoBehaviour
     public void Update()
     {
         //Camera.transform.position = transform.position + pivotOffset;
+    }
+
+    public void PlayerResetCamera()
+    {
+        Debug.Log("Camera Pos Reset");
+        Camera = GameObject.FindGameObjectWithTag("PlayerCamera");
+        if (Camera == null)
+            Debug.LogError("Camera Not Found");
+
+        Camera.transform.position = transform.position + pivotOffset;
     }
 }

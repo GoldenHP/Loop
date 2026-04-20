@@ -7,6 +7,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] public int enemyMaxHealth = 20;
     [SerializeField] public float enemyMaxSpeed = 10f;
     [SerializeField] public int enemyAttackDamage = 2;
+    [SerializeField] public float enemyAttackLength = 2f;
 
     [Header("Debug Colors")]
     public Color HitColor = Color.red;
@@ -36,6 +37,9 @@ public class EnemyScript : MonoBehaviour
     private bool lookingHarder = false;
 
     private int enemyCurrentHealth;
+
+    private bool isAttacking = false;
+    private float enemyAttacktime = 0f;
 
     private void Start()
     {
@@ -73,6 +77,16 @@ public class EnemyScript : MonoBehaviour
         }
 
         EnemyMove(hit);
+
+        if(isAttacking)
+            enemyAttacktime += Time.deltaTime;
+        if(enemyAttacktime > enemyAttackLength)
+        {
+            enemyAttacktime = 0;
+            isAttacking = false;
+            animator.SetBool("stab", false);
+            TrackingTarget = null;
+        }
     }
 
     public void EnemyMove(RaycastHit hit)
@@ -88,7 +102,7 @@ public class EnemyScript : MonoBehaviour
                 animator.SetBool("walk", true);
                 animator.SetBool("run", false);
 
-                Vector3 EnemyMovementVector = Vector3.Lerp(transform.position, TrackingTarget.transform.position, Time.deltaTime / 10f);
+                Vector3 EnemyMovementVector = Vector3.Lerp(transform.position, TrackingTarget.transform.position, Time.deltaTime / 2f);
                 transform.position = EnemyMovementVector;
             }
             else
@@ -133,9 +147,12 @@ public class EnemyScript : MonoBehaviour
         lookingHarder = false;
     }
 
-    public void TakeDamage(int DamageDealt)
+    public void TakeDamage(int DamageDealt, GameObject Player)
     {
         enemyCurrentHealth -= DamageDealt;
+
+        TrackingTarget = Player;
+
         if(enemyCurrentHealth <= 0)
             EnemyDeath();
     }
@@ -150,6 +167,6 @@ public class EnemyScript : MonoBehaviour
         animator.SetBool("run", false);
         animator.SetBool("walk", false);
         animator.SetBool("stab", true);
-        TrackingTarget = null;
+        isAttacking = true;
     }
 }

@@ -263,10 +263,27 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player Took damage");
                 if(PlayerCurrentHealth <= 0)
                 {
-                    //Death();
+                    Death();
                     Debug.Log("Death Should Occur");
                 }
             }
         }
+    }
+
+    private void Death()
+    {
+        CreateGame gameCreator;
+        GameObject creator = GameObject.Find("GameSetter");
+
+        gameCreator = creator.GetComponent<CreateGame>();
+
+        if (!creator)
+            Debug.Log("Creator not found");
+        if (gameCreator == null)
+            Debug.Log("Game Creator Not found");
+
+        gameCreator.PlayerDied();
+        Destroy(gameObject);
+
     }
 }
