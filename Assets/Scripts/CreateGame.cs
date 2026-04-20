@@ -1,4 +1,6 @@
+using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CreateGame : MonoBehaviour
 {
@@ -12,13 +14,15 @@ public class CreateGame : MonoBehaviour
 
     private GameObject CurrentPlayer;
 
+    private int EnemyTillWin = 20;
+
     private void Start()
     {
-        Instantiate(Players[DeathCount], PlayerSpawn.transform);
+        CurrentPlayer = Instantiate(Players[DeathCount], PlayerSpawn.transform);
 
         for(int i = 0; i < EnemySpawns.Length; i++)
         {
-            CurrentPlayer = Instantiate(Enemys[Random.Range(0, Enemys.Length-1)], EnemySpawns[i].transform);
+            Instantiate(Enemys[Random.Range(0, Enemys.Length-1)], EnemySpawns[i].transform);
         }
     }
 
@@ -30,7 +34,7 @@ public class CreateGame : MonoBehaviour
             CurrentPlayer = Instantiate(Players[DeathCount], PlayerSpawn.transform);
         else
         {
-            //GameLose();
+            GameLose();
         }
 
         ControlCamera cam;
@@ -41,5 +45,26 @@ public class CreateGame : MonoBehaviour
         {
             cam.PlayerResetCamera();
         }
+    }
+
+    public void EnemyDied()
+    {
+        EnemyTillWin--;
+        Instantiate(Enemys[Random.Range(0, Enemys.Length - 1)], EnemySpawns[Random.Range(0, EnemySpawns.Length - 1)].transform);
+
+        if(EnemyTillWin <= 0)
+        {
+            PlayerWins();
+        }
+    }
+
+    public void GameLose()
+    {
+        SceneManager.LoadScene(2);
+    }
+
+    public void PlayerWins()
+    {
+        SceneManager.LoadScene(3);
     }
 }

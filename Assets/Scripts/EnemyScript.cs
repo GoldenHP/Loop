@@ -159,6 +159,19 @@ public class EnemyScript : MonoBehaviour
 
     public void EnemyDeath()
     {
+        CreateGame gameCreator;
+        GameObject creator = GameObject.Find("GameSetter");
+
+        gameCreator = creator.GetComponent<CreateGame>();
+        if (!creator)
+            Debug.Log("Couldnt Find Game Setter Object - Enemy");
+        if (!gameCreator)
+            Debug.Log("Couldnt Find Game Creator - Enemy");
+        else
+        {
+            gameCreator.EnemyDied();
+        }
+
         Destroy(gameObject);
     }
 

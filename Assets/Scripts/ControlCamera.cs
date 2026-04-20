@@ -20,6 +20,9 @@ public class ControlCamera : MonoBehaviour
             Debug.LogError("Camera Not Found");
 
         Camera.transform.position = transform.position + pivotOffset;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void LookMouse(InputAction.CallbackContext context)
