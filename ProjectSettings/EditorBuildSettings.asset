@@ -9,14 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 722bfb28cf83a4b4e9ad66f4a3392220
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/TreeLevel.unity
+    guid: e8a8e3798aa54dc4db7b57c950474b7e
   - enabled: 1
     path: Assets/Scenes/PlayerLose.unity
     guid: 5c0bdf2cd678ceb4b84c3abce3ec79a8
   - enabled: 1
     path: Assets/Scenes/PlayerWin.unity
     guid: 72c91a9aaeb7cd943b86c6d9ec41f50e
+  - enabled: 0
+    path: Assets/Scenes/Level1.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b6c4195e1bad0e841b22549c845733ce, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

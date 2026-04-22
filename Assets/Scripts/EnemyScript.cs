@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -25,6 +26,9 @@ public class EnemyScript : MonoBehaviour
     [Header("Movement Ranges")]
     public float AttackRange = 2f;
     public float WalkRange = 10f;
+
+    [Header("Health Text")]
+    public TMP_Text health;
 
     private Animator animator;
     private GameObject TrackingTarget;
@@ -87,6 +91,8 @@ public class EnemyScript : MonoBehaviour
             animator.SetBool("stab", false);
             TrackingTarget = null;
         }
+
+        health.text = ("HP: " + enemyCurrentHealth.ToString()); 
     }
 
     public void EnemyMove(RaycastHit hit)

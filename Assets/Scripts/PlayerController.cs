@@ -62,6 +62,10 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("VFX Script Failed to load");
 
         PlayerCurrentHealth = PlayerMaxHealth;
+
+        GameObject Canvas = GameObject.Find("Canvas");
+        PlayerHP hp = Canvas.GetComponent<PlayerHP>();
+        hp.UpdateHealth(PlayerCurrentHealth);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -260,6 +264,9 @@ public class PlayerController : MonoBehaviour
             else
             {
                 PlayerCurrentHealth -= enemy.enemyAttackDamage;
+                GameObject Canvas = GameObject.Find("Canvas");
+                PlayerHP hp = Canvas.GetComponent<PlayerHP>();
+                hp.UpdateHealth(PlayerCurrentHealth);
                 Debug.Log("Player Took damage");
                 if(PlayerCurrentHealth <= 0)
                 {
@@ -270,7 +277,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Death()
+    public void Death()
     {
         CreateGame gameCreator;
         GameObject creator = GameObject.Find("GameSetter");

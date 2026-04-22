@@ -24,6 +24,10 @@ public class CreateGame : MonoBehaviour
         {
             Instantiate(Enemys[Random.Range(0, Enemys.Length-1)], EnemySpawns[i].transform);
         }
+
+        GameObject Canvas = GameObject.Find("Canvas");
+        PlayerHP EnemyUpdate = Canvas.GetComponent<PlayerHP>();
+        EnemyUpdate.UpdateEnemiesLeft(EnemyTillWin);
     }
 
     public void PlayerDied()
@@ -51,8 +55,11 @@ public class CreateGame : MonoBehaviour
     {
         EnemyTillWin--;
         Instantiate(Enemys[Random.Range(0, Enemys.Length - 1)], EnemySpawns[Random.Range(0, EnemySpawns.Length - 1)].transform);
+        GameObject Canvas = GameObject.Find("Canvas");
+        PlayerHP EnemyUpdate = Canvas.GetComponent<PlayerHP>();
+        EnemyUpdate.UpdateEnemiesLeft(EnemyTillWin);
 
-        if(EnemyTillWin <= 0)
+        if (EnemyTillWin <= 0)
         {
             PlayerWins();
         }
@@ -61,10 +68,14 @@ public class CreateGame : MonoBehaviour
     public void GameLose()
     {
         SceneManager.LoadScene(2);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void PlayerWins()
     {
         SceneManager.LoadScene(3);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
